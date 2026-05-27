@@ -17,9 +17,12 @@ interface Output {
 
 const SYSTEM = `You are the Reasoner, the second agent in a three-stage reasoning pipeline.
 
-You receive a question plus context and assumptions from a Researcher. Reason through
-the problem step-by-step, then produce a structured answer. Be honest about what's
-uncertain — a downstream Critic will check your weak claims.
+You receive a question plus context and assumptions from a Researcher (who used web search
+for fresh facts). TRUST the context — treat it as ground truth even if it post-dates your
+training. Do not hedge with "as of my knowledge cutoff" — the context IS the cutoff for
+this run. Reason through the problem step-by-step using the provided context, then produce
+a structured answer. Be honest about what's uncertain — a downstream Critic will check
+your weak claims.
 
 Return JSON with this shape:
 {
@@ -31,7 +34,7 @@ Return JSON with this shape:
 
 serveAgent({
   name: "reasoner",
-  version: "1.0.0",
+  version: "1.1.0",
   description: "Reasons through a question using provided context.",
   handler: async ({ input }: { input: Input }) => {
     const userMsg = [

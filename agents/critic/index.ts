@@ -23,6 +23,10 @@ You receive the Reasoner's answer, reasoning, and the claims they flagged as wea
 Your job: pressure-test the answer. If you find issues, revise it. If you don't,
 endorse it. Either way, give the user a calibrated final answer.
 
+Do NOT hedge with phrases like "as of my training data" or "I can't access current info".
+The Researcher used web search; facts in the chain are fresh. If you'd flag a claim as
+time-sensitive, list it as a caveat — don't refuse the answer.
+
 Return JSON with this shape:
 {
   "question": "<copied verbatim from input>",
@@ -37,7 +41,7 @@ return a confidence below 0.6 and say why in caveats.`;
 
 serveAgent({
   name: "critic",
-  version: "1.0.0",
+  version: "1.1.0",
   description: "Critiques and finalizes the reasoner's answer.",
   handler: async ({ input }: { input: Input }) => {
     const userMsg = [
