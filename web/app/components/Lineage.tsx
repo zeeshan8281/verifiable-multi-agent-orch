@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Lineage, StepEnvelope, VerifyResult } from "@verified-handoff/types";
 import { verifyLineage } from "@verified-handoff/verify";
 
@@ -22,15 +22,36 @@ export function StepCard({
   env,
   prev,
   index,
+  status,
 }: {
   env: StepEnvelope;
   prev?: StepEnvelope;
   index: number;
+  status?: "verified" | "failed" | "pending";
 }) {
   const [open, setOpen] = useState(false);
   const role = env.agent.split("@")[0];
   const tint = AGENT_TINTS[role] ?? "text-zinc-300 border-zinc-500/30";
   const linkageOk = !prev || prev.outputHash === env.inputHash;
+  const effective = status ?? "pending";
+
+  const badge =
+    effective === "verified" ? (
+      <span className="text-xs text-emerald-400 flex items-center gap-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+        verified
+      </span>
+    ) : effective === "failed" ? (
+      <span className="text-xs text-red-400 flex items-center gap-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block" />
+        invalid
+      </span>
+    ) : (
+      <span className="text-xs text-zinc-500 flex items-center gap-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-zinc-500 inline-block" />
+        not yet verified
+      </span>
+    );
 
   return (
     <div className={`rounded-lg border bg-[#0c0c0c] ${tint.split(" ")[1]}`}>
@@ -45,10 +66,7 @@ export function StepCard({
           <span className="font-medium">{env.agent}</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-emerald-400 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-            verified
-          </span>
+          {badge}
           <span className="text-zinc-500 text-xs">{open ? "−" : "+"}</span>
         </div>
       </button>
@@ -70,7 +88,12 @@ export function StepCard({
           </Row>
           <Row label="signature">
             <span className="mono text-zinc-400">{short(env.signature, 12, 8)}</span>
-            <span className="ml-2 text-xs text-emerald-400">✓ valid</span>
+            {effective === "verified" && (
+              <span className="ml-2 text-xs text-emerald-400">✓ valid</span>
+            )}
+            {effective === "failed" && (
+              <span className="ml-2 text-xs text-red-400">✗ invalid</span>
+            )}
           </Row>
           <Row label="pubkey">
             <span className="mono text-zinc-400">{short(env.pubkey, 12, 8)}</span>
@@ -135,6 +158,18 @@ export function LineagePanel({
   const [tamper, setTamper] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  useEffect(() => {
+    if (!lineage) return;
+    let cancelled = false;
+    setTamper(false);
+    verifyLineage(lineage).then((r) => {
+      if (!cancelled) setVerifyResult(r);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [lineage]);
+
   const onVerify = async () => {
     if (!lineage) return;
     setVerifying(true);
@@ -173,9 +208,23 @@ export function LineagePanel({
       </div>
 
       <div className="space-y-2">
-        {steps.map((env, i) => (
-          <StepCard key={env.signature} env={env} prev={steps[i - 1]} index={i} />
-        ))}
+        {steps.map((env, i) => {
+          const d = verifyResult?.details.find((x) => x.step === i);
+          const status: "verified" | "failed" | "pending" | undefined = !verifyResult
+            ? undefined
+            : d && d.signatureOk && d.linkageOk
+              ? "verified"
+              : "failed";
+          return (
+            <StepCard
+              key={env.signature}
+              env={env}
+              prev={steps[i - 1]}
+              index={i}
+              status={status}
+            />
+          );
+        })}
       </div>
 
       {steps.length > 0 && lineage && (
