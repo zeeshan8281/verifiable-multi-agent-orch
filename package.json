@@ -1,0 +1,31 @@
+{
+  "name": "verified-handoff-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Verifiable multi-agent orchestration on EigenCompute. Each agent's output is cryptographically signed inside its TEE and verified before the next agent consumes it.",
+  "type": "module",
+  "scripts": {
+    "dev:researcher": "PORT=4001 tsx agents/researcher/index.ts",
+    "dev:reasoner":   "PORT=4002 tsx agents/reasoner/index.ts",
+    "dev:critic":     "PORT=4003 tsx agents/critic/index.ts",
+    "dev:agents": "concurrently -k -n researcher,reasoner,critic -c blue,magenta,green \"npm:dev:researcher\" \"npm:dev:reasoner\" \"npm:dev:critic\"",
+    "dev:web": "cd web && npm run dev",
+    "dev": "concurrently -k -n researcher,reasoner,critic,web -c blue,magenta,green,cyan \"npm:dev:researcher\" \"npm:dev:reasoner\" \"npm:dev:critic\" \"npm:dev:web\"",
+    "demo": "tsx scripts/live.ts",
+    "smoke": "tsx scripts/smoke.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0",
+    "@noble/ed25519": "^2.1.0",
+    "@noble/hashes": "^1.5.0",
+    "hono": "^4.6.0",
+    "@hono/node-server": "^1.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "concurrently": "^9.1.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
