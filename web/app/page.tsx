@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Lineage, StepEnvelope } from "@verified-handoff/types";
 import { LineagePanel } from "./components/Lineage";
+import { ThinkingPanel } from "./components/Thinking";
 
 interface CriticOutput {
   question: string;
@@ -189,51 +190,30 @@ export default function Home() {
               <span className="text-xs text-zinc-500">trust: math + TEEs</span>
             </div>
             <div className="rounded-lg border border-emerald-500/30 bg-[#0c0c0c] p-5 space-y-4">
-              {!final && !running && (
+              {!running && steps.length === 0 && !final && (
                 <div className="text-sm text-zinc-600 min-h-[14rem]">
-                  Run a question to see the verified pipeline. Each agent runs
-                  in its own TEE. Each handoff is signed. Click any card to
-                  inspect.
-                </div>
-              )}
-              {final && (
-                <div className="space-y-2">
-                  <div className="text-zinc-200">{final.final_answer}</div>
-                  <div className="text-xs text-zinc-500">
-                    confidence{" "}
-                    <span className="mono text-zinc-300">
-                      {final.confidence.toFixed(2)}
-                    </span>
-                    {final.changed_from_reasoner && (
-                      <span className="ml-2 text-amber-300">
-                        · critic revised the reasoner
-                      </span>
-                    )}
-                  </div>
-                  {final.caveats && final.caveats.length > 0 && (
-                    <ul className="text-xs text-zinc-400 list-disc pl-5 space-y-0.5">
-                      {final.caveats.map((c, i) => (
-                        <li key={i}>{c}</li>
-                      ))}
-                    </ul>
-                  )}
+                  Run a question to watch each TEE-agent think out loud,
+                  signing as it hands off to the next.
                 </div>
               )}
 
               {(running || steps.length > 0) && (
-                <div className="pt-4 border-t border-zinc-800">
-                  <LineagePanel
-                    steps={steps}
-                    pipelineId={lineage?.pipelineId}
-                    lineage={lineage ?? undefined}
-                  />
-                  {running && steps.length < 3 && (
-                    <div className="text-xs text-zinc-500 mt-3 animate-pulse">
-                      waiting for{" "}
-                      {["researcher", "reasoner", "critic"][steps.length]}…
-                    </div>
-                  )}
-                </div>
+                <ThinkingPanel steps={steps} running={running} />
+              )}
+
+              {steps.length > 0 && (
+                <details className="pt-3 border-t border-zinc-800">
+                  <summary className="cursor-pointer text-xs uppercase tracking-wider text-zinc-500 hover:text-zinc-300">
+                    proof layer — signatures, hashes, TEE attestations ↓
+                  </summary>
+                  <div className="pt-4">
+                    <LineagePanel
+                      steps={steps}
+                      pipelineId={lineage?.pipelineId}
+                      lineage={lineage ?? undefined}
+                    />
+                  </div>
+                </details>
               )}
             </div>
           </div>
