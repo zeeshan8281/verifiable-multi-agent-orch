@@ -219,13 +219,18 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="pt-8 border-t border-zinc-800 text-xs text-zinc-500 flex justify-between">
+        <footer className="pt-8 border-t border-zinc-800 text-xs text-zinc-500 flex flex-wrap justify-between gap-3">
           <span>
             unlike Dust / Crew / LangGraph, every handoff is provable. not promised.
           </span>
-          <a href="/verify" className="text-zinc-400 hover:text-zinc-200">
-            verify a lineage ↗
-          </a>
+          <span className="flex gap-4">
+            <a href="/docs" className="text-zinc-400 hover:text-zinc-200">
+              integrate as SDK ↗
+            </a>
+            <a href="/verify" className="text-zinc-400 hover:text-zinc-200">
+              verify a lineage ↗
+            </a>
+          </span>
         </footer>
       </div>
     </main>
