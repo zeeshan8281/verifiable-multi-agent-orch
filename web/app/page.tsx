@@ -82,24 +82,13 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full">
       <div className="max-w-6xl mx-auto px-6 py-10 space-y-8">
-        <div className="flex items-center justify-between pb-2 border-b border-border">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/eigen/primary-wordmark-light.svg"
-            alt="Eigen Cloud"
-            className="h-7 w-auto opacity-90"
-          />
-          <div className="flex items-center gap-5 text-xs">
-            <a href="/docs" className="text-foreground/80 hover:text-foreground">
-              integrate as SDK ↗
-            </a>
-            <a href="/verify" className="text-foreground/80 hover:text-foreground">
-              verify a lineage ↗
-            </a>
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground border-l border-border pl-5">
-              verifiable AI · live demo
-            </span>
-          </div>
+        <div className="flex items-center justify-end pb-2 border-b border-border gap-5 text-xs">
+          <a href="/docs" className="text-foreground/80 hover:text-foreground">
+            integrate as SDK ↗
+          </a>
+          <a href="/verify" className="text-foreground/80 hover:text-foreground">
+            verify a lineage ↗
+          </a>
         </div>
 
         <header className="space-y-2">
