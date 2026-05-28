@@ -95,7 +95,7 @@ export async function askJSON<T>(opts: AskOptions): Promise<AskResult<T>> {
   const attestations: InferenceAttestation[] = [];
   let toolUses = 0;
 
-  for (let turn = 0; turn < maxToolUses + 4; turn++) {
+  for (let turn = 0; turn < maxToolUses + 6; turn++) {
     const body: Record<string, unknown> = {
       model: MODEL,
       max_tokens: opts.maxTokens ?? 1024,
@@ -199,7 +199,18 @@ export async function askJSON<T>(opts: AskOptions): Promise<AskResult<T>> {
       });
       continue;
     }
-    return { data: parseJSONLoose<T>(text), attestations };
+    try {
+      return { data: parseJSONLoose<T>(text), attestations };
+    } catch (e) {
+      messages.push({ role: "assistant", content: text });
+      messages.push({
+        role: "user",
+        content: `Your last reply was not valid JSON (${
+          e instanceof Error ? e.message : String(e)
+        }). Reply now with the required JSON object only — no prose, no code fences, no trailing commas, strings must be properly escaped.`,
+      });
+      continue;
+    }
   }
 
   throw new Error("askJSON: exceeded tool loop without final assistant message");
@@ -207,16 +218,29 @@ export async function askJSON<T>(opts: AskOptions): Promise<AskResult<T>> {
 
 function parseJSONLoose<T>(text: string): T {
   const stripped = text.replace(/^```(?:json)?\s*|\s*```$/g, "").trim();
-  try {
-    return JSON.parse(stripped) as T;
-  } catch {}
+  const candidates = [stripped];
   const first = stripped.indexOf("{");
   const last = stripped.lastIndexOf("}");
   if (first !== -1 && last !== -1 && last > first) {
-    const slice = stripped.slice(first, last + 1);
-    return JSON.parse(slice) as T;
+    candidates.push(stripped.slice(first, last + 1));
+  }
+  const sanitizers: Array<(s: string) => string> = [
+    (s) => s,
+    (s) => s.replace(/,\s*([}\]])/g, "$1"),
+  ];
+  let lastErr: unknown;
+  for (const c of candidates) {
+    for (const sanitize of sanitizers) {
+      try {
+        return JSON.parse(sanitize(c)) as T;
+      } catch (e) {
+        lastErr = e;
+      }
+    }
   }
   throw new Error(
-    `askJSON: response did not contain a JSON object. raw text: ${text.slice(0, 200)}`,
+    `askJSON: response did not contain valid JSON (${
+      lastErr instanceof Error ? lastErr.message : String(lastErr)
+    }). raw text: ${text.slice(0, 200)}`,
   );
 }
