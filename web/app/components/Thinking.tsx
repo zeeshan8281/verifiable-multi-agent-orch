@@ -21,6 +21,12 @@ interface CriticOutput {
   caveats?: string[];
   changed_from_reasoner?: boolean;
 }
+interface InferenceAttestation {
+  model: string;
+  provider: string;
+  responseHash: string;
+  seSignature: string;
+}
 
 const AGENTS = [
   {
@@ -105,6 +111,16 @@ export function ThinkingPanel({
                     {step.agent}
                   </span>
                 )}
+                {step && (() => {
+                  const att = (step.output as { inference?: InferenceAttestation[] } | undefined)
+                    ?.inference?.[0];
+                  if (!att) return null;
+                  return (
+                    <span className="text-[10px] text-emerald-300/80 border border-emerald-500/30 rounded px-1.5 py-0.5">
+                      SE · {att.model}
+                    </span>
+                  );
+                })()}
               </div>
               <span
                 className={`text-xs ${step ? "text-emerald-400" : "text-muted-foreground"}`}

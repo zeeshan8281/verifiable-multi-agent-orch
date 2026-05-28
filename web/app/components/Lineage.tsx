@@ -7,6 +7,13 @@ import { Badge, Button } from "@layr-labs/eigen-design";
 
 const EIGEN_VERIFY_BASE = "https://verify-sepolia.eigencloud.xyz/app";
 
+interface InferenceAttestation {
+  responseHash: string;
+  seSignature: string;
+  model: string;
+  provider: string;
+}
+
 const AGENT_TINTS: Record<string, string> = {
   researcher: "text-blue-300 border-blue-500/30",
   reasoner: "text-fuchsia-300 border-fuchsia-500/30",
@@ -104,6 +111,30 @@ export function StepCard({
               <span className="mono text-muted-foreground">{short(env.codeMeasurement, 12, 8)}</span>
             </Row>
           )}
+          {(() => {
+            const out = env.output as { inference?: InferenceAttestation[] } | undefined;
+            const att = out?.inference?.[0];
+            if (!att) return null;
+            return (
+              <div className="mt-3 pt-3 border-t border-border space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    inference attestation
+                  </span>
+                  <Badge className="bg-emerald-500/15 text-emerald-300 border-emerald-500/30">
+                    {att.provider}/{att.model}
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">via Apple Secure Enclave</span>
+                </div>
+                <Row label="response hash">
+                  <span className="mono text-muted-foreground">{short(att.responseHash, 12, 8)}</span>
+                </Row>
+                <Row label="SE signature">
+                  <span className="mono text-muted-foreground">{short(att.seSignature, 12, 8)}</span>
+                </Row>
+              </div>
+            );
+          })()}
           <div className="pt-2 flex flex-wrap gap-2">
             {env.eigenAppId ? (
               <Button asChild size="xs" variant="outline">
