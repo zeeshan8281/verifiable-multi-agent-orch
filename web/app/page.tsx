@@ -89,9 +89,17 @@ export default function Home() {
             alt="Eigen Cloud"
             className="h-7 w-auto opacity-90"
           />
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-            verifiable AI · live demo
-          </span>
+          <div className="flex items-center gap-5 text-xs">
+            <a href="/docs" className="text-foreground/80 hover:text-foreground">
+              integrate as SDK ↗
+            </a>
+            <a href="/verify" className="text-foreground/80 hover:text-foreground">
+              verify a lineage ↗
+            </a>
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground border-l border-border pl-5">
+              verifiable AI · live demo
+            </span>
+          </div>
         </div>
 
         <header className="space-y-2">
@@ -244,29 +252,19 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="pt-8 border-t border-border text-xs text-muted-foreground space-y-4">
-          <div className="flex flex-wrap justify-between gap-3">
-            <span>
-              unlike Dust / Crew / LangGraph, every handoff is provable. not promised.
-            </span>
-            <span className="flex gap-4">
-              <a href="/docs" className="text-foreground/80 hover:text-foreground">
-                integrate as SDK ↗
-              </a>
-              <a href="/verify" className="text-foreground/80 hover:text-foreground">
-                verify a lineage ↗
-              </a>
-            </span>
-          </div>
-          <div className="flex items-center gap-2 pt-3 border-t border-border/60">
-            <span>made verifiable with</span>
+        <footer className="pt-8 border-t border-border text-xs text-muted-foreground flex flex-wrap items-center justify-between gap-3">
+          <span>
+            unlike Dust / Crew / LangGraph, every handoff is provable. not promised.
+          </span>
+          <span className="flex items-center gap-2">
+            made verifiable with
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/eigen/primary-wordmark-light.svg"
               alt="Eigen Cloud"
               className="h-4 w-auto opacity-90"
             />
-          </div>
+          </span>
         </footer>
       </div>
     </main>
