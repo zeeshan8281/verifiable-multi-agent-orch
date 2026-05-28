@@ -35,7 +35,7 @@ export default function VerifyPage() {
     <main className="min-h-screen w-full">
       <div className="max-w-3xl mx-auto px-6 py-10 space-y-6">
         <header className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="font-heading text-2xl font-semibold tracking-tight">
             verify a lineage
           </h1>
           <p className="text-zinc-400">
@@ -57,7 +57,7 @@ export default function VerifyPage() {
           <button
             onClick={onVerify}
             disabled={!text.trim()}
-            className="px-5 py-2.5 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 disabled:opacity-40"
+            className="px-5 py-2.5 rounded-lg bg-indigo-500 text-white font-medium hover:bg-indigo-400 disabled:opacity-40"
           >
             Verify
           </button>

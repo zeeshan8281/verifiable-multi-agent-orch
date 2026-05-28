@@ -9,7 +9,7 @@ const EIGEN_VERIFY_BASE = "https://verify-sepolia.eigencloud.xyz/app";
 const AGENT_TINTS: Record<string, string> = {
   researcher: "text-blue-300 border-blue-500/30",
   reasoner: "text-fuchsia-300 border-fuchsia-500/30",
-  critic: "text-emerald-300 border-emerald-500/30",
+  critic: "text-indigo-300 border-indigo-500/30",
 };
 
 function short(hex: string, head = 8, tail = 6) {

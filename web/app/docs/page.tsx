@@ -76,7 +76,7 @@ export default function DocsPage() {
                     href={href}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
-                    className="text-emerald-300 hover:text-emerald-200 underline underline-offset-2"
+                    className="text-indigo-300 hover:text-indigo-200 underline underline-offset-2"
                     {...rest}
                   />
                 );
@@ -111,7 +111,7 @@ export default function DocsPage() {
               ),
               blockquote: (p) => (
                 <blockquote
-                  className="border-l-2 border-emerald-500/40 pl-4 my-4 text-zinc-400 italic"
+                  className="border-l-2 border-indigo-500/40 pl-4 my-4 text-zinc-400 italic"
                   {...p}
                 />
               ),

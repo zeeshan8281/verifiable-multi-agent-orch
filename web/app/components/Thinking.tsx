@@ -43,9 +43,9 @@ const AGENTS = [
     role: "critic",
     label: "Critic",
     activeText: "Pressure-testing the answer…",
-    border: "border-emerald-500/30",
-    text: "text-emerald-300",
-    dim: "text-emerald-400/70",
+    border: "border-indigo-500/30",
+    text: "text-indigo-300",
+    dim: "text-indigo-400/70",
   },
 ] as const;
 

@@ -83,8 +83,8 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-6 py-10 space-y-8">
         <header className="space-y-2">
           <div className="flex items-center gap-3">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
-            <h1 className="text-2xl font-semibold tracking-tight">
+            <span className="inline-block w-2 h-2 rounded-full bg-indigo-400" />
+            <h1 className="font-heading text-2xl font-semibold tracking-tight">
               verified-handoff
             </h1>
             <span className="text-xs text-zinc-500 mono">
@@ -94,7 +94,7 @@ export default function Home() {
           <p className="text-zinc-400 max-w-2xl">
             Three agents — <span className="text-blue-300">Researcher</span> →{" "}
             <span className="text-fuchsia-300">Reasoner</span> →{" "}
-            <span className="text-emerald-300">Critic</span> — collaborate on
+            <span className="text-indigo-300">Critic</span> — collaborate on
             your question. Each handoff is signed inside a TEE. Anyone can
             re-verify the whole chain.
           </p>
@@ -119,7 +119,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={running || !question.trim()}
-                className="px-5 py-3 rounded-lg bg-emerald-500 text-black font-medium hover:bg-emerald-400 disabled:opacity-40"
+                className="px-5 py-3 rounded-lg bg-indigo-500 text-white font-medium hover:bg-indigo-400 disabled:opacity-40"
               >
                 {running ? "Running…" : "Run pipeline"}
               </button>
@@ -186,14 +186,14 @@ export default function Home() {
           {/* RIGHT — verified pipeline */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-wider text-emerald-400">
+              <span className="text-xs uppercase tracking-wider text-indigo-300">
                 verified-handoff
               </span>
               <span className="text-xs text-zinc-500">
                 trust model: prove-it (signatures + TEEs)
               </span>
             </div>
-            <div className="rounded-lg border border-emerald-500/30 bg-[#0c0c0c] p-5 space-y-4">
+            <div className="rounded-lg border border-indigo-500/30 bg-[#0c0c0c] p-5 space-y-4">
               {!running && steps.length === 0 && !final && (
                 <div className="text-sm text-zinc-600 min-h-[14rem]">
                   Run a question to watch each TEE-agent think out loud,
