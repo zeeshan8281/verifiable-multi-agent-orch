@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # Deploy all three agents to EigenCompute.
-# Requires: ecloud auth login completed, ANTHROPIC_API_KEY in env.
+# Requires: ecloud auth login completed.
 #
-# Usage: REGISTRY=... TAG=... ANTHROPIC_API_KEY=... ./scripts/deploy-agents.sh
+# Usage: REGISTRY=... TAG=... DARKBLOOM_API_KEY=... TAVILY_API_KEY=... ./scripts/deploy-agents.sh
 set -euo pipefail
 
 REGISTRY="${REGISTRY:?set REGISTRY}"
-TAG="${TAG:-0.1.0}"
+TAG="${TAG:-0.3.0}"
 INSTANCE_TYPE="${INSTANCE_TYPE:-g1-standard-4t}"
-ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY}"
+DARKBLOOM_API_KEY="${DARKBLOOM_API_KEY:?set DARKBLOOM_API_KEY}"
+TAVILY_API_KEY="${TAVILY_API_KEY:-}"
 
 cd "$(dirname "$0")/.."
 
@@ -24,8 +25,13 @@ for AGENT in researcher reasoner critic; do
   mkdir -p "${DIR}"
   cd "${DIR}"
 
-  # Sealed secret for the LLM key.
-  printf "ANTHROPIC_API_KEY=%s\n" "${ANTHROPIC_API_KEY}" > .env
+  # Sealed secrets — DARKBLOOM is the LLM provider, TAVILY is for researcher web_search.
+  {
+    printf "DARKBLOOM_API_KEY=%s\n" "${DARKBLOOM_API_KEY}"
+    if [ -n "${TAVILY_API_KEY}" ]; then
+      printf "TAVILY_API_KEY=%s\n" "${TAVILY_API_KEY}"
+    fi
+  } > .env
 
   echo "==> deploying ${APP_NAME} (${IMAGE})"
   ecloud compute app deploy \

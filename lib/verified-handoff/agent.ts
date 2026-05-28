@@ -127,9 +127,13 @@ export function serveAgent<I, O>(
   const tag = `[${def.name}@${def.version}]`;
   console.log(`${tag} listening on 0.0.0.0:${port}`);
   console.log(`${tag} pubkey ${identity.publicKey}`);
-  const hasKey = Boolean(process.env.ANTHROPIC_API_KEY);
+  const hasKey = Boolean(process.env.DARKBLOOM_API_KEY);
   console.log(
-    `${tag} ANTHROPIC_API_KEY: ${hasKey ? "configured" : "missing — LLM calls will fail"}`,
+    `${tag} DARKBLOOM_API_KEY: ${hasKey ? "configured" : "missing — LLM calls will fail"}`,
+  );
+  const hasSearch = Boolean(process.env.TAVILY_API_KEY);
+  console.log(
+    `${tag} TAVILY_API_KEY: ${hasSearch ? "configured" : "missing — web_search will error"}`,
   );
   if (process.env.EIGEN_APP_ID) {
     console.log(`${tag} eigenAppId ${process.env.EIGEN_APP_ID}`);

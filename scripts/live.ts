@@ -6,8 +6,8 @@
  * and exits.
  *
  * Usage:
- *   ANTHROPIC_API_KEY=sk-ant-... npm run demo
- *   ANTHROPIC_API_KEY=sk-ant-... npm run demo -- "Your question here"
+ *   DARKBLOOM_API_KEY=eigeninference-... npm run demo
+ *   DARKBLOOM_API_KEY=eigeninference-... npm run demo -- "Your question here"
  */
 import "../lib/load-env.js";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -24,8 +24,8 @@ const QUESTION =
   process.argv.slice(2).join(" ").trim() ||
   "Should I worry about quantum computers breaking Bitcoin in the next 10 years?";
 
-if (!process.env.ANTHROPIC_API_KEY) {
-  console.error("✗ ANTHROPIC_API_KEY is not set. Add it to .env and re-run.");
+if (!process.env.DARKBLOOM_API_KEY) {
+  console.error("✗ DARKBLOOM_API_KEY is not set. Add it to .env and re-run.");
   process.exit(1);
 }
 

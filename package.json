@@ -12,11 +12,11 @@
     "dev:web": "cd web && npm run dev",
     "dev": "concurrently -k -n researcher,reasoner,critic,web -c blue,magenta,green,cyan \"npm:dev:researcher\" \"npm:dev:reasoner\" \"npm:dev:critic\" \"npm:dev:web\"",
     "demo": "tsx scripts/live.ts",
+    "demo:cli": "tsx scripts/demo-cli.ts",
     "smoke": "tsx scripts/smoke.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.40.0",
     "@noble/ed25519": "^2.1.0",
     "@noble/hashes": "^1.5.0",
     "hono": "^4.6.0",

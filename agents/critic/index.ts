@@ -15,6 +15,7 @@ interface Output {
   confidence: number;        // 0..1
   caveats: string[];
   changed_from_reasoner: boolean;
+  inference?: import("../shared/llm.js").InferenceAttestation[];
 }
 
 const SYSTEM = `You are the Critic, the final agent in a three-stage reasoning pipeline.
@@ -55,11 +56,11 @@ serveAgent({
       "REASONER'S WEAK CLAIMS:",
       ...input.weakClaims.map((c, i) => `  ${i + 1}. ${c}`),
     ].join("\n");
-    const out = await askJSON<Output>({
+    const { data, attestations } = await askJSON<Output>({
       system: SYSTEM,
       user: userMsg,
       maxTokens: 1500,
     });
-    return out;
+    return { ...data, inference: attestations };
   },
 });

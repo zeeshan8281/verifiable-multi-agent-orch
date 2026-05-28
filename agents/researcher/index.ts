@@ -10,19 +10,18 @@ interface Output {
   question: string;
   context: string[];
   assumptions: string[];
+  inference?: import("../shared/llm.js").InferenceAttestation[];
 }
 
 const SYSTEM = `You are the Researcher, the first agent in a three-stage reasoning pipeline.
 
-You have a web_search tool. USE IT for any question that could touch:
+If web_search is available (you will be told), call it for anything time-sensitive:
 - current events, news, recent product launches, prices, releases
 - evolving science / medicine / regulation
-- anything where a fact might have changed in the last 2 years
 - specific numbers (stats, dates, rankings, market caps, populations)
+- anything where a fact might have changed in the last 2 years
 
-If the question is purely conceptual ("what is recursion?") you may skip search.
-Never refuse or hedge based on knowledge cutoff — search instead. Up to 3 searches.
-
+If no search is available, answer from your own knowledge — do not hedge, do not refuse.
 Your job: surface the relevant background a downstream reasoner needs to answer well.
 You do NOT answer the question yourself.
 
@@ -40,12 +39,12 @@ serveAgent({
   version: "1.1.0",
   description: "Surfaces relevant context and assumptions for a question. Uses web search.",
   handler: async ({ input }: { input: Input }) => {
-    const out = await askJSON<Output>({
+    const { data, attestations } = await askJSON<Output>({
       system: SYSTEM,
       user: input.question,
       maxTokens: 2048,
       webSearch: { maxUses: 3 },
     });
-    return out;
+    return { ...data, inference: attestations };
   },
 });
