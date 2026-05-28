@@ -1,5 +1,6 @@
 node_modules
 dist
+!web/vendor/**/dist
 .env
 .env.local
 .next
