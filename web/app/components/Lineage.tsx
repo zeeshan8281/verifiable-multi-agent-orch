@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Lineage, StepEnvelope, VerifyResult } from "@verified-handoff/types";
 import { verifyLineage } from "@verified-handoff/verify";
+import { Badge, Button } from "@layr-labs/eigen-design";
 
 const EIGEN_VERIFY_BASE = "https://verify-sepolia.eigencloud.xyz/app";
 
@@ -37,24 +38,24 @@ export function StepCard({
 
   const badge =
     effective === "verified" ? (
-      <span className="text-xs text-emerald-400 flex items-center gap-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+      <Badge className="bg-emerald-500/15 text-emerald-300 border-emerald-500/30">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block mr-1.5" />
         verified
-      </span>
+      </Badge>
     ) : effective === "failed" ? (
-      <span className="text-xs text-red-400 flex items-center gap-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block" />
+      <Badge variant="destructive">
+        <span className="w-1.5 h-1.5 rounded-full bg-current inline-block mr-1.5" />
         invalid
-      </span>
+      </Badge>
     ) : (
-      <span className="text-xs text-zinc-500 flex items-center gap-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-zinc-500 inline-block" />
+      <Badge variant="outline" className="text-muted-foreground">
+        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground inline-block mr-1.5" />
         not yet verified
-      </span>
+      </Badge>
     );
 
   return (
-    <div className={`rounded-lg border bg-[#0c0c0c] ${tint.split(" ")[1]}`}>
+    <div className={`rounded-lg border bg-card ${tint.split(" ")[1]}`}>
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between p-4 text-left"
@@ -67,14 +68,14 @@ export function StepCard({
         </div>
         <div className="flex items-center gap-3">
           {badge}
-          <span className="text-zinc-500 text-xs">{open ? "−" : "+"}</span>
+          <span className="text-muted-foreground text-xs">{open ? "−" : "+"}</span>
         </div>
       </button>
 
       {open && (
-        <div className="px-4 pb-4 space-y-3 text-sm border-t border-zinc-800 pt-3">
+        <div className="px-4 pb-4 space-y-3 text-sm border-t border-border pt-3">
           <Row label="input hash">
-            <span className="mono text-zinc-400">{short(env.inputHash, 12, 8)}</span>
+            <span className="mono text-muted-foreground">{short(env.inputHash, 12, 8)}</span>
             {prev && (
               <span
                 className={`ml-2 text-xs ${linkageOk ? "text-emerald-400" : "text-red-400"}`}
@@ -84,10 +85,10 @@ export function StepCard({
             )}
           </Row>
           <Row label="output hash">
-            <span className="mono text-zinc-400">{short(env.outputHash, 12, 8)}</span>
+            <span className="mono text-muted-foreground">{short(env.outputHash, 12, 8)}</span>
           </Row>
           <Row label="signature">
-            <span className="mono text-zinc-400">{short(env.signature, 12, 8)}</span>
+            <span className="mono text-muted-foreground">{short(env.signature, 12, 8)}</span>
             {effective === "verified" && (
               <span className="ml-2 text-xs text-emerald-400">✓ valid</span>
             )}
@@ -96,33 +97,34 @@ export function StepCard({
             )}
           </Row>
           <Row label="pubkey">
-            <span className="mono text-zinc-400">{short(env.pubkey, 12, 8)}</span>
+            <span className="mono text-muted-foreground">{short(env.pubkey, 12, 8)}</span>
           </Row>
           {env.codeMeasurement && (
             <Row label="code measurement">
-              <span className="mono text-zinc-400">{short(env.codeMeasurement, 12, 8)}</span>
+              <span className="mono text-muted-foreground">{short(env.codeMeasurement, 12, 8)}</span>
             </Row>
           )}
           <div className="pt-2 flex flex-wrap gap-2">
             {env.eigenAppId ? (
-              <a
-                href={`${EIGEN_VERIFY_BASE}/${env.eigenAppId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs px-2.5 py-1 rounded-md border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/10"
-              >
-                Verify TEE on Eigen ↗
-              </a>
+              <Button asChild size="xs" variant="outline">
+                <a
+                  href={`${EIGEN_VERIFY_BASE}/${env.eigenAppId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Verify TEE on Eigen ↗
+                </a>
+              </Button>
             ) : (
-              <span className="text-xs px-2.5 py-1 rounded-md border border-zinc-700 text-zinc-500">
+              <Badge variant="outline" className="text-muted-foreground">
                 local mode (no TEE)
-              </span>
+              </Badge>
             )}
             <details className="text-xs">
-              <summary className="cursor-pointer text-zinc-400 px-2.5 py-1 border border-zinc-700 rounded-md">
+              <summary className="cursor-pointer text-muted-foreground px-2.5 py-1 border border-border rounded-md hover:text-foreground">
                 view output
               </summary>
-              <pre className="mt-2 p-3 bg-black border border-zinc-800 rounded text-zinc-300 mono overflow-auto max-h-80 max-w-full whitespace-pre-wrap">
+              <pre className="mt-2 p-3 bg-background border border-border rounded text-foreground/90 mono overflow-auto max-h-80 max-w-full whitespace-pre-wrap">
                 {JSON.stringify(env.output, null, 2)}
               </pre>
             </details>
@@ -136,7 +138,7 @@ export function StepCard({
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-baseline gap-3">
-      <span className="text-xs uppercase tracking-wider text-zinc-500 w-32 shrink-0">
+      <span className="text-xs uppercase tracking-wider text-muted-foreground w-32 shrink-0">
         {label}
       </span>
       <div className="flex-1 min-w-0">{children}</div>
@@ -199,11 +201,11 @@ export function LineagePanel({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs uppercase tracking-wider text-zinc-500">
+        <span className="text-xs uppercase tracking-wider text-muted-foreground">
           verification chain
         </span>
         {pipelineId && (
-          <span className="text-xs mono text-zinc-500">id {short(pipelineId, 10, 6)}</span>
+          <span className="text-xs mono text-muted-foreground">id {short(pipelineId, 10, 6)}</span>
         )}
       </div>
 
@@ -230,20 +232,13 @@ export function LineagePanel({
       {steps.length > 0 && lineage && (
         <>
           <div className="flex flex-wrap items-center gap-2 pt-2">
-            <button
-              onClick={onVerify}
-              disabled={verifying}
-              className="text-sm px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/20 disabled:opacity-50"
-            >
+            <Button onClick={onVerify} disabled={verifying} size="sm">
               {verifying ? "Re-verifying…" : "Re-verify entire chain"}
-            </button>
-            <button
-              onClick={onCopy}
-              className="text-sm px-3 py-1.5 rounded-md border border-zinc-700 text-zinc-300 hover:bg-zinc-900"
-            >
+            </Button>
+            <Button onClick={onCopy} size="sm" variant="outline">
               {copied ? "Copied!" : "Copy lineage JSON"}
-            </button>
-            <label className="text-xs text-zinc-400 ml-auto flex items-center gap-2 cursor-pointer">
+            </Button>
+            <label className="text-xs text-muted-foreground ml-auto flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={tamper}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Lineage, VerifyResult } from "@verified-handoff/types";
 import { verifyLineage } from "@verified-handoff/verify";
+import { Button, Textarea } from "@layr-labs/eigen-design";
 import { LineagePanel } from "../components/Lineage";
 
 export default function VerifyPage() {
@@ -38,35 +39,28 @@ export default function VerifyPage() {
           <h1 className="font-heading text-2xl font-semibold tracking-tight">
             verify a lineage
           </h1>
-          <p className="text-zinc-400">
-            Paste any <code className="mono text-zinc-300">lineage</code>{" "}
+          <p className="text-muted-foreground">
+            Paste any <code className="mono text-foreground/90">lineage</code>{" "}
             object. We re-check every signature and every hash link locally in
             your browser. No infrastructure of ours involved.
           </p>
         </header>
 
-        <textarea
+        <Textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Paste lineage JSON…"
           rows={12}
-          className="w-full bg-[#0c0c0c] border border-zinc-800 rounded-lg px-4 py-3 text-sm mono focus:outline-none focus:border-zinc-600"
+          className="mono text-sm"
         />
 
         <div className="flex gap-2">
-          <button
-            onClick={onVerify}
-            disabled={!text.trim()}
-            className="px-5 py-2.5 rounded-lg bg-indigo-500 text-white font-medium hover:bg-indigo-400 disabled:opacity-40"
-          >
+          <Button onClick={onVerify} disabled={!text.trim()} size="lg">
             Verify
-          </button>
-          <a
-            href="/"
-            className="px-5 py-2.5 rounded-lg border border-zinc-700 text-zinc-300 hover:bg-zinc-900"
-          >
-            ← back
-          </a>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <a href="/">← back</a>
+          </Button>
         </div>
 
         {error && (

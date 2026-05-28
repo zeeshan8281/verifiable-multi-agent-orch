@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Lineage, StepEnvelope } from "@verified-handoff/types";
+import { Badge, Button, Card, Input } from "@layr-labs/eigen-design";
 import { LineagePanel } from "./components/Lineage";
 import { ThinkingPanel } from "./components/Thinking";
 
@@ -87,11 +88,11 @@ export default function Home() {
             <h1 className="font-heading text-2xl font-semibold tracking-tight">
               verified-handoff
             </h1>
-            <span className="text-xs text-zinc-500 mono">
+            <span className="text-xs text-muted-foreground mono">
               multi-agent orchestration on EigenCompute
             </span>
           </div>
-          <p className="text-zinc-400 max-w-2xl">
+          <p className="text-muted-foreground max-w-2xl">
             Three agents — <span className="text-blue-300">Researcher</span> →{" "}
             <span className="text-fuchsia-300">Reasoner</span> →{" "}
             <span className="text-indigo-300">Critic</span> — collaborate on
@@ -108,37 +109,43 @@ export default function Home() {
             }}
           >
             <div className="flex gap-2">
-              <input
+              <Input
                 type="text"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="Ask anything…"
-                className="flex-1 bg-[#0c0c0c] border border-zinc-800 rounded-lg px-4 py-3 text-base focus:outline-none focus:border-zinc-600"
+                className="flex-1 h-12 text-base"
                 disabled={running}
               />
-              <button
+              <Button
                 type="submit"
+                size="lg"
                 disabled={running || !question.trim()}
-                className="px-5 py-3 rounded-lg bg-indigo-500 text-white font-medium hover:bg-indigo-400 disabled:opacity-40"
               >
                 {running ? "Running…" : "Run pipeline"}
-              </button>
+              </Button>
             </div>
           </form>
-          <div className="flex flex-wrap gap-2 text-xs">
-            <span className="text-zinc-500">try:</span>
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <span className="text-muted-foreground">try:</span>
             {EXAMPLES.map((e) => (
-              <button
+              <Badge
                 key={e}
-                onClick={() => {
-                  setQuestion(e);
-                  if (!running) run(e);
-                }}
-                disabled={running}
-                className="text-zinc-400 hover:text-zinc-200 border border-zinc-800 rounded px-2 py-0.5 disabled:opacity-40"
+                variant="outline"
+                asChild
+                className="cursor-pointer hover:bg-accent"
               >
-                {e}
-              </button>
+                <button
+                  onClick={() => {
+                    setQuestion(e);
+                    if (!running) run(e);
+                  }}
+                  disabled={running}
+                  className="disabled:opacity-40"
+                >
+                  {e}
+                </button>
+              </Badge>
             ))}
           </div>
         </section>
@@ -153,34 +160,36 @@ export default function Home() {
           {/* LEFT — what you get from a standard orchestrator */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-wider text-zinc-500">
+              <span className="text-xs uppercase tracking-wider text-muted-foreground">
                 standard pipeline
               </span>
-              <span className="text-xs text-zinc-600">trust model: trust-me</span>
+              <span className="text-xs text-muted-foreground/70">
+                trust model: trust-me
+              </span>
             </div>
-            <div className="rounded-lg border border-zinc-800 bg-[#0c0c0c] p-5 min-h-[16rem]">
+            <Card className="p-5 min-h-[16rem]">
               {!final && !running && (
-                <div className="text-sm text-zinc-600">
+                <div className="text-sm text-muted-foreground">
                   This is what Dust / LangGraph / Crew hand you today: an
                   answer. Nothing to verify which agents actually ran, what
                   they actually said, or that the chain wasn't tampered with.
                 </div>
               )}
               {running && !final && (
-                <div className="text-sm text-zinc-500 animate-pulse">
+                <div className="text-sm text-muted-foreground animate-pulse">
                   generating…
                 </div>
               )}
               {final && (
                 <div className="space-y-3">
-                  <div className="text-zinc-200">{final.final_answer}</div>
-                  <div className="text-xs text-zinc-600 italic">
+                  <div className="text-foreground">{final.final_answer}</div>
+                  <div className="text-xs text-muted-foreground italic">
                     ↑ that's it. No signatures, no provenance, no proof three
                     agents even ran. You take the provider's word for it.
                   </div>
                 </div>
               )}
-            </div>
+            </Card>
           </div>
 
           {/* RIGHT — verified pipeline */}
@@ -189,13 +198,13 @@ export default function Home() {
               <span className="text-xs uppercase tracking-wider text-indigo-300">
                 verified-handoff
               </span>
-              <span className="text-xs text-zinc-500">
+              <span className="text-xs text-muted-foreground">
                 trust model: prove-it (signatures + TEEs)
               </span>
             </div>
-            <div className="rounded-lg border border-indigo-500/30 bg-[#0c0c0c] p-5 space-y-4">
+            <Card className="p-5 space-y-4 border-indigo-500/30">
               {!running && steps.length === 0 && !final && (
-                <div className="text-sm text-zinc-600 min-h-[14rem]">
+                <div className="text-sm text-muted-foreground min-h-[14rem]">
                   Run a question to watch each TEE-agent think out loud,
                   signing as it hands off to the next.
                 </div>
@@ -206,8 +215,8 @@ export default function Home() {
               )}
 
               {steps.length > 0 && (
-                <details className="pt-3 border-t border-zinc-800">
-                  <summary className="cursor-pointer text-xs uppercase tracking-wider text-zinc-500 hover:text-zinc-300">
+                <details className="pt-3 border-t border-border">
+                  <summary className="cursor-pointer text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground">
                     proof layer — signatures, hashes, TEE attestations ↓
                   </summary>
                   <div className="pt-4">
@@ -219,19 +228,19 @@ export default function Home() {
                   </div>
                 </details>
               )}
-            </div>
+            </Card>
           </div>
         </section>
 
-        <footer className="pt-8 border-t border-zinc-800 text-xs text-zinc-500 flex flex-wrap justify-between gap-3">
+        <footer className="pt-8 border-t border-border text-xs text-muted-foreground flex flex-wrap justify-between gap-3">
           <span>
             unlike Dust / Crew / LangGraph, every handoff is provable. not promised.
           </span>
           <span className="flex gap-4">
-            <a href="/docs" className="text-zinc-400 hover:text-zinc-200">
+            <a href="/docs" className="text-foreground/80 hover:text-foreground">
               integrate as SDK ↗
             </a>
-            <a href="/verify" className="text-zinc-400 hover:text-zinc-200">
+            <a href="/verify" className="text-foreground/80 hover:text-foreground">
               verify a lineage ↗
             </a>
           </span>

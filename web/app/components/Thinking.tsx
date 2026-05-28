@@ -85,15 +85,15 @@ export function ThinkingPanel({
         return (
           <div
             key={a.role}
-            className={`rounded-lg border bg-[#0c0c0c] ${
+            className={`rounded-lg border bg-card ${
               step
                 ? a.border
                 : isActive
                   ? `${a.border} animate-pulse`
-                  : "border-zinc-900 opacity-50"
+                  : "border-border opacity-50"
             }`}
           >
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-zinc-800/60">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
               <div className="flex items-center gap-2">
                 <span
                   className={`text-xs uppercase tracking-wider ${a.text}`}
@@ -101,25 +101,25 @@ export function ThinkingPanel({
                   {a.label}
                 </span>
                 {step && (
-                  <span className="text-xs text-zinc-500 mono">
+                  <span className="text-xs text-muted-foreground mono">
                     {step.agent}
                   </span>
                 )}
               </div>
               <span
-                className={`text-xs ${step ? "text-emerald-400" : "text-zinc-600"}`}
+                className={`text-xs ${step ? "text-emerald-400" : "text-muted-foreground"}`}
               >
                 {step ? "✓ signed" : isActive ? "thinking…" : "waiting"}
               </span>
             </div>
             <div className="p-4 space-y-3 text-sm">
               {isPending && (
-                <div className="text-zinc-600 text-xs italic">
+                <div className="text-muted-foreground text-xs italic">
                   — not started —
                 </div>
               )}
               {isActive && (
-                <div className="text-zinc-500 text-xs">{a.activeText}</div>
+                <div className="text-muted-foreground text-xs">{a.activeText}</div>
               )}
               {step && a.role === "researcher" && (
                 <ResearcherView
@@ -178,14 +178,14 @@ function ResearcherView({
       <Section title="Context" dim={dim}>
         <ul className="space-y-1.5 list-disc pl-5">
           {output.context.map((c, i) => (
-            <li key={i} className="text-zinc-300 leading-relaxed">
+            <li key={i} className="text-foreground/90 leading-relaxed">
               {linkify(c)}
             </li>
           ))}
         </ul>
       </Section>
       <Section title="Assumptions" dim={dim}>
-        <ul className="space-y-1 list-disc pl-5 text-zinc-400 text-xs">
+        <ul className="space-y-1 list-disc pl-5 text-muted-foreground text-xs">
           {output.assumptions.map((a, i) => (
             <li key={i}>{a}</li>
           ))}
@@ -205,16 +205,16 @@ function ReasonerView({
   return (
     <div className="space-y-3">
       <Section title="Reasoning" dim={dim}>
-        <p className="text-zinc-300 whitespace-pre-wrap leading-relaxed">
+        <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed">
           {output.reasoning}
         </p>
       </Section>
       <Section title="Draft answer" dim={dim}>
-        <p className="text-zinc-200">{output.answer}</p>
+        <p className="text-foreground">{output.answer}</p>
       </Section>
       {output.weakClaims.length > 0 && (
         <Section title="Weak claims (flagged for critic)" dim={dim}>
-          <ul className="space-y-1 list-disc pl-5 text-zinc-400 text-xs">
+          <ul className="space-y-1 list-disc pl-5 text-muted-foreground text-xs">
             {output.weakClaims.map((w, i) => (
               <li key={i}>{w}</li>
             ))}
@@ -235,12 +235,12 @@ function CriticView({
   return (
     <div className="space-y-3">
       <Section title="Final answer" dim={dim}>
-        <p className="text-zinc-100 leading-relaxed">{output.final_answer}</p>
+        <p className="text-foreground leading-relaxed">{output.final_answer}</p>
       </Section>
       <div className="flex items-center gap-4 text-xs">
-        <span className="text-zinc-400">
+        <span className="text-muted-foreground">
           confidence{" "}
-          <span className="mono text-zinc-200">
+          <span className="mono text-foreground">
             {output.confidence.toFixed(2)}
           </span>
         </span>
@@ -250,7 +250,7 @@ function CriticView({
       </div>
       {output.caveats && output.caveats.length > 0 && (
         <Section title="Caveats" dim={dim}>
-          <ul className="space-y-1 list-disc pl-5 text-zinc-400 text-xs">
+          <ul className="space-y-1 list-disc pl-5 text-muted-foreground text-xs">
             {output.caveats.map((c, i) => (
               <li key={i}>{c}</li>
             ))}
